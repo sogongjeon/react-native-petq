@@ -2,13 +2,13 @@ import React from 'react';
 import {Text, SafeAreaView} from 'react-native';
 import tw from 'tailwind-react-native-classnames';
 
-const CommunityScreen = ({navigation}) => {
-  console.log('커뮤니티 화면');
+const SplashScreen = ({navigation}) => {
+  console.log('스플래시 화면');
   return (
     <SafeAreaView style={tw`flex-auto justify-center items-center bg-white`}>
-      <Text>커뮤니티</Text>
+      <Text>Loading...</Text>
     </SafeAreaView>
   );
 };
 
-export default CommunityScreen;
+export default SplashScreen;

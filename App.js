@@ -1,86 +1,109 @@
-import React from 'react';
+import React, {useEffect, useReducer, useMemo} from 'react';
 import {SafeAreaView} from 'react-native';
-import {Provider} from 'react-redux';
-import {store} from './store';
-import {SafeAreaProvider} from 'react-native-safe-area-context';
-import HomeScreen from './screens/HomeScreen';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
-import LostDirectScreen from './screens/LostDirectScreen';
-import AdoptDirectScreen from './screens/AdoptDirectScreen';
 import {Icon} from 'react-native-elements/dist/icons/Icon';
+import tw from 'tailwind-react-native-classnames';
+import HomeScreen from './screens/HomeScreen';
 import ListScreen from './screens/ListScreen';
 import CommunityScreen from './screens/CommunityScreen';
 import NotificationScreen from './screens/NotificationScreen';
 import SettingScreen from './screens/SettingScreen';
 import ItemDetailScreen from './screens/ItemDetailScreen';
-import tw from 'tailwind-react-native-classnames';
+import LoginScreen from './screens/LoginScreen';
+import SplashScreen from './screens/SplashScreen';
+import LostDirectScreen from './screens/LostDirectScreen';
+import AdoptDirectScreen from './screens/AdoptDirectScreen';
+import {AuthContext} from './components/AuthContext';
 
-const TopTab = createMaterialTopTabNavigator();
-const BottomTab = createBottomTabNavigator();
-const HomeStack = createNativeStackNavigator();
-const ListStack = createNativeStackNavigator();
-
-// 홈 화면
-function HomeStackScreen() {
+// 메인 화면
+const MainBottomTab = createBottomTabNavigator();
+const MainStack = createNativeStackNavigator();
+function MainStackScreen() {
   return (
-    <HomeStack.Navigator
-      screenOptions={{
+    <MainBottomTab.Navigator
+      screenOptions={({route}) => ({
+        // 헤더 스타일
+        headerLargeTitle: true,
+        headerStyle: {shadowOpacity: 0},
         headerBackTitleVisible: false,
-        headerShadowVisible: false,
         headerTintColor: 'black',
-        headerTitleStyle: {
-          fontSize: 24,
-          fontWeight: 'bold',
+
+        // 탭바 스타일
+        tabBarActiveTintColor: 'black',
+        tabBarInactiveTintColor: 'gray',
+        tabBarShowLabel: false,
+        tabBarStyle: {
+          borderTopColor: 'transparent',
+          position: 'absolute',
+          overflow: 'hidden',
+          padding: 5,
         },
-      }}>
-      <HomeStack.Screen
-        name="Home"
+        tabBarIcon: ({focused, color, size}) => {
+          let iconName;
+          if (route.name === '홈') {
+            iconName = focused ? 'home' : 'home';
+          } else if (route.name === '열람') {
+            iconName = focused ? 'book-open' : 'book-open';
+          } else if (route.name === '커뮤니티') {
+            iconName = focused ? 'hash' : 'hash';
+          } else if (route.name === '알림') {
+            iconName = focused ? 'star' : 'star';
+          } else if (route.name === '설정') {
+            iconName = focused ? 'menu' : 'menu';
+          }
+          return (
+            <Icon name={iconName} size={size} color={color} type="feather" />
+          );
+        },
+      })}>
+      <MainBottomTab.Screen
+        name="홈"
         component={HomeScreen}
         options={{
+          headerTitleStyle: {
+            fontSize: 24,
+            fontWeight: 'bold',
+          },
           title: 'PetQ',
-          headerLargeTitle: true,
         }}
       />
-      <HomeStack.Screen
-        name="LostDirectScreen"
-        component={LostDirectScreen}
+      <MainBottomTab.Screen
+        name="열람"
+        component={ListStackScreen}
         options={{
-          title: '',
-          // headerShown: false,
+          headerShown: false,
         }}
       />
-      <HomeStack.Screen
-        name="AdoptDirectScreen"
-        component={AdoptDirectScreen}
-        options={{
-          title: '',
-          // headerShown: false,
-        }}
-      />
-    </HomeStack.Navigator>
+      <MainBottomTab.Screen name="커뮤니티" component={CommunityScreen} />
+      <MainBottomTab.Screen name="알림" component={NotificationScreen} />
+      <MainBottomTab.Screen name="설정" component={SettingScreen} />
+    </MainBottomTab.Navigator>
   );
 }
 
 // 열람 화면
+const ListTopTab = createMaterialTopTabNavigator();
+const ListStack = createNativeStackNavigator();
 function ListStackScreen() {
   return (
     <ListStack.Navigator
       screenOptions={{
+        // 헤더 스타일
         headerBackTitleVisible: false,
         headerShadowVisible: false,
         headerTitle: '',
-        headerShown: false,
+        headerTintColor: 'black',
       }}>
       <ListStack.Screen
-        name="ItemDetail"
+        name="List"
         component={ListTopTabScreen}
-        options={{}}
+        options={{headerShown: false}}
       />
       <ListStack.Screen
-        name="ItemDetail1"
+        name="ItemDetail"
         component={ItemDetailScreen}
         options={{}}
       />
@@ -92,8 +115,7 @@ function ListTopTabScreen() {
   return (
     <>
       <SafeAreaView style={tw`bg-white`} />
-      <TopTab.Navigator
-        initialRouteName="List1"
+      <ListTopTab.Navigator
         screenOptions={{
           // tabBarInactiveTintColor: 'black',
           tabBarActiveTintColor: 'black',
@@ -107,82 +129,140 @@ function ListTopTabScreen() {
           },
           swipeEnabled: false,
         }}>
-        <TopTab.Screen
-          name="List1"
+        <ListTopTab.Screen
+          name="Shelter"
           component={ListScreen}
           options={{title: '보호소'}}
         />
-        <TopTab.Screen
-          name="List2"
-          component={ItemDetailScreen}
+        <ListTopTab.Screen
+          name="Lost"
+          component={LostDirectScreen}
           options={{title: '실종'}}
         />
-        <TopTab.Screen
-          name="List3"
+        <ListTopTab.Screen
+          name="Protect"
           component={LostDirectScreen}
           options={{title: '목격/보호'}}
         />
-      </TopTab.Navigator>
+      </ListTopTab.Navigator>
     </>
   );
 }
 
 // 전체 화면
-export default function App() {
+export default function App({navigation}) {
+  const [state, dispatch] = useReducer(
+    (prevState, action) => {
+      switch (action.type) {
+        case 'RESTORE_TOKEN':
+          return {
+            ...prevState,
+            userToken: action.token,
+            isLoading: false,
+          };
+        case 'SIGN_IN':
+          return {
+            ...prevState,
+            isSignout: false,
+            userToken: action.token,
+          };
+        case 'SIGN_OUT':
+          return {
+            ...prevState,
+            isSignout: true,
+            userToken: null,
+          };
+      }
+    },
+    {
+      // isLoading - 토큰 저장 확인
+      // isSignout - 로그아웃 확인
+      // userToken - 사용자 토큰, null이 아닌 경우 사용자가 로그인됨
+      isLoading: true,
+      isSignout: false,
+      userToken: null,
+    },
+  );
+
+  useEffect(() => {
+    // 여기서 토큰 동기화 Redux 사용해보면 된다고함
+    const bootstrapAsync = async () => {
+      let userToken;
+      try {
+      } catch (e) {}
+      dispatch({type: 'RESTORE_TOKEN', token: userToken});
+    };
+
+    bootstrapAsync();
+  }, []);
+
+  const authContext = useMemo(
+    () => ({
+      signIn: async data => {
+        dispatch({type: 'SIGN_IN', token: 'dummy-auth-token'});
+      },
+      signOut: () => dispatch({type: 'SIGN_OUT'}),
+      signUp: async data => {
+        dispatch({type: 'SIGN_IN', token: 'dummy-auth-token'});
+      },
+    }),
+    [],
+  );
+
   return (
-    <Provider store={store}>
+    <AuthContext.Provider value={authContext}>
       <NavigationContainer>
-        <SafeAreaProvider>
-          <BottomTab.Navigator
-            initialRouteName="Home"
-            screenOptions={({route}) => ({
-              tabBarIcon: ({focused, color, size}) => {
-                let iconName;
-
-                if (route.name === 'Home') {
-                  iconName = focused ? 'home' : 'home';
-                } else if (route.name === 'List') {
-                  iconName = focused ? 'book-open' : 'book-open';
-                } else if (route.name === 'Community') {
-                  iconName = focused ? 'hash' : 'hash';
-                } else if (route.name === 'Notification') {
-                  iconName = focused ? 'star' : 'star';
-                } else if (route.name === 'Settings') {
-                  iconName = focused ? 'menu' : 'menu';
-                }
-
-                // You can return any component that you like here!
-                return (
-                  <Icon
-                    name={iconName}
-                    size={size}
-                    color={color}
-                    type="feather"
-                  />
-                );
-              },
-              tabBarActiveTintColor: 'black',
-              tabBarInactiveTintColor: 'gray',
-              tabBarShowLabel: false,
-              headerShown: false,
-              tabBarStyle: {
-                borderTopColor: 'transparent',
-                position: 'absolute',
-                overflow: 'hidden',
-                padding: 5,
-              },
-            })}>
-            <BottomTab.Screen name="Home" component={HomeStackScreen} />
-            <BottomTab.Screen name="List" component={ListStackScreen} />
-            <BottomTab.Screen name="Community" component={CommunityScreen} />
-            <BottomTab.Screen
-              name="Notification"
-              component={NotificationScreen}
+        <MainStack.Navigator
+          initialRouteName="Login"
+          screenOptions={{
+            headerBackTitleVisible: false,
+            headerShadowVisible: false,
+            headerTintColor: 'black',
+            headerTitleStyle: {
+              fontSize: 24,
+              fontWeight: 'bold',
+            },
+            headerShown: false,
+          }}>
+          {state.isLoading ? (
+            <MainStack.Screen name="Splash" component={SplashScreen} />
+          ) : state.userToken == null ? (
+            <MainStack.Screen
+              name="Login"
+              component={LoginScreen}
+              options={{
+                animationTypeForReplace: state.isSignout ? 'pop' : 'push',
+              }}
             />
-            <BottomTab.Screen name="Settings" component={SettingScreen} />
-          </BottomTab.Navigator>
-        </SafeAreaProvider>
+          ) : (
+            <>
+              <MainStack.Screen
+                name="Home"
+                component={MainStackScreen}
+                options={{
+                  headerLargeTitle: true,
+                }}
+              />
+              <MainStack.Screen
+                name="LostDirect"
+                component={LostDirectScreen}
+                options={{
+                  headerShown: true,
+                  headerTitle: '',
+                }}
+              />
+              <MainStack.Screen
+                name="AdoptDirect"
+                component={AdoptDirectScreen}
+                options={{
+                  headerShown: true,
+                  headerTitle: '',
+                }}
+              />
+            </>
+          )}
+        </MainStack.Navigator>
       </NavigationContainer>
-    </Provider>
+    </AuthContext.Provider>
   );
 }
