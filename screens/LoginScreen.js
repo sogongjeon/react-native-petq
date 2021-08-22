@@ -1,13 +1,13 @@
 import React from 'react';
-import {Text, SafeAreaView} from 'react-native';
+import {Text, SafeAreaView, View} from 'react-native';
 import tw from 'tailwind-react-native-classnames';
 
-const AdoptDirectScreen = ({navigation}) => {
+const LoginScren = ({navigation}) => {
   return (
     <SafeAreaView style={tw`flex-auto justify-center items-center bg-white`}>
-      <Text>유기동물을 입양하고 싶어요 😍</Text>
+      <Text style={tw``}>로그인</Text>
     </SafeAreaView>
   );
 };
 
-export default AdoptDirectScreen;
+export default LoginScren;
