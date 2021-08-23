@@ -24,25 +24,9 @@ const LoginScreen = ({navigation}) => {
           uri: 'https://mblogthumb-phinf.pstatic.net/MjAyMDAyMDZfMSAg/MDAxNTgwOTYxNTQ1NDAx.GZkh36wScdDere6JaAyRWugwlNZ11UL0RoiykfMTTfsg.3q8Pa9FfwI4myGXjVPRkDc1VI7lHic3jAmg_mMxdI1Eg.PNG.africaamc/cm08045034.png?type=w800',
         }}>
         <SafeAreaView style={tw`flex-auto justify-center items-center`}>
-          <Text
-            style={{
-              fontWeight: 'bold',
-              fontSize: 50,
-              color: 'black',
-              marginBottom: 200,
-            }}>
-            PetQ
-          </Text>
+          <Text style={tw`text-black text-4xl mb-80 font-black`}>PetQ</Text>
           <View
-            style={{
-              width: '80%',
-              backgroundColor: '#465881',
-              borderRadius: 25,
-              height: 60,
-              marginBottom: 20,
-              justifyContent: 'center',
-              padding: 20,
-            }}>
+            style={tw`w-10/12 h-14 m-2 justify-center p-4 bg-blue-500 rounded-3xl`}>
             <TextInput
               placeholderTextColor="white"
               placeholder="사용자 이름"
@@ -51,15 +35,7 @@ const LoginScreen = ({navigation}) => {
             />
           </View>
           <View
-            style={{
-              width: '80%',
-              backgroundColor: '#465881',
-              borderRadius: 25,
-              height: 60,
-              marginBottom: 20,
-              justifyContent: 'center',
-              padding: 20,
-            }}>
+            style={tw`w-10/12 h-14 m-2 justify-center p-4 bg-blue-500 rounded-3xl`}>
             <TextInput
               placeholder="비밀번호"
               placeholderTextColor="white"
@@ -69,22 +45,14 @@ const LoginScreen = ({navigation}) => {
             />
           </View>
           <TouchableOpacity>
-            <Text style={{color: 'black', fontSize: 11}}>
+            <Text style={tw`text-black text-sm`}>
               비밀번호를 잊어버리셨나요?
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => signIn({username, password})}
-            style={{
-              width: '80%',
-              backgroundColor: '#fb5b5a',
-              borderRadius: 25,
-              height: 50,
-              alignItems: 'center',
-              justifyContent: 'center',
-              marginTop: 40,
-            }}>
-            <Text style={{color: 'white'}}>로그인</Text>
+            style={tw`w-10/12 h-14 m-2 mt-10 justify-center items-center p-4 bg-red-500 rounded-3xl`}>
+            <Text style={tw`text-white`}>로그인</Text>
           </TouchableOpacity>
         </SafeAreaView>
       </ImageBackground>

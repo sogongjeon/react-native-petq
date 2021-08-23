@@ -3,7 +3,7 @@ import {Text, SafeAreaView, TouchableOpacity} from 'react-native';
 import tw from 'tailwind-react-native-classnames';
 import {Icon} from 'react-native-elements/dist/icons/Icon';
 
-const ItemDetailScreen = ({navigation}) => {
+const ItemDetailScreen = ({navigation, route}) => {
   console.log('열람 세부정보 화면');
   React.useLayoutEffect(() => {
     navigation.setOptions({
@@ -22,7 +22,15 @@ const ItemDetailScreen = ({navigation}) => {
 
   return (
     <SafeAreaView style={tw`flex-auto justify-center items-center bg-white`}>
-      <Text>세부 정보</Text>
+      <Text>{route.params.id}</Text>
+      <Text>{route.params.type}</Text>
+      <Text>{route.params.image}</Text>
+      <Text>{route.params.kindName}</Text>
+      <Text>{route.params.place}</Text>
+      <Text>{route.params.date}</Text>
+      <Text>{route.params.sex}</Text>
+      <Text>{route.params.dday}</Text>
+      <Text>{route.params.favorite}</Text>
     </SafeAreaView>
   );
 };

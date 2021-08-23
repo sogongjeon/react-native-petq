@@ -231,7 +231,8 @@ export default function App({navigation}) {
               name="Login"
               component={LoginScreen}
               options={{
-                animationTypeForReplace: state.isSignout ? 'pop' : 'push',
+                animation: 'flip',
+                // animationTypeForReplace: state.isSignout ? 'pop' : 'push',
               }}
             />
           ) : (
