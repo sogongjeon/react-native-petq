@@ -4,9 +4,9 @@ import tw from 'tailwind-react-native-classnames';
 
 const Flag = props => {
   return (
-    <View style={tw`absolute w-9 bg-gray-500 ml-2`}>
-      <View style={[styles.flagTop, tw`w-9`]} />
-      <View style={styles.flagBottom} />
+    <View style={tw`absolute w-9 bg-gray-500 ml-2 shadow-xl`}>
+      <View style={[styles.flagTop, tw`w-9 shadow-xl`]} />
+      <View style={[styles.flagBottom, tw`shadow-xl`]} />
       <Text
         style={tw`absolute text-white font-bold pt-1 w-full text-xs text-center`}>
         {props.text}

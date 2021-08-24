@@ -26,22 +26,24 @@ const LoginScreen = ({navigation}) => {
         <SafeAreaView style={tw`flex-auto justify-center items-center`}>
           <Text style={tw`text-black text-4xl mb-80 font-black`}>PetQ</Text>
           <View
-            style={tw`w-10/12 h-14 m-2 justify-center p-4 bg-blue-500 rounded-3xl`}>
+            style={tw`w-10/12 h-14 m-2 justify-center p-4 bg-black rounded-3xl`}>
             <TextInput
               placeholderTextColor="white"
               placeholder="사용자 이름"
               value={username}
               onChangeText={setUsername}
+              style={tw`text-white`}
             />
           </View>
           <View
-            style={tw`w-10/12 h-14 m-2 justify-center p-4 bg-blue-500 rounded-3xl`}>
+            style={tw`w-10/12 h-14 m-2 justify-center p-4 bg-black rounded-3xl`}>
             <TextInput
               placeholder="비밀번호"
               placeholderTextColor="white"
               value={password}
               onChangeText={setPassword}
               secureTextEntry
+              style={tw`text-white`}
             />
           </View>
           <TouchableOpacity>

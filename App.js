@@ -102,11 +102,6 @@ function ListStackScreen() {
         component={ListTopTabScreen}
         options={{headerShown: false}}
       />
-      <ListStack.Screen
-        name="ItemDetail"
-        component={ItemDetailScreen}
-        options={{}}
-      />
     </ListStack.Navigator>
   );
 }
@@ -222,7 +217,7 @@ export default function App({navigation}) {
               fontSize: 24,
               fontWeight: 'bold',
             },
-            headerShown: false,
+            headerShown: true,
           }}>
           {state.isLoading ? (
             <MainStack.Screen name="Splash" component={SplashScreen} />
@@ -232,6 +227,7 @@ export default function App({navigation}) {
               component={LoginScreen}
               options={{
                 animation: 'flip',
+                headerShown: false,
                 // animationTypeForReplace: state.isSignout ? 'pop' : 'push',
               }}
             />
@@ -242,13 +238,13 @@ export default function App({navigation}) {
                 component={MainStackScreen}
                 options={{
                   headerLargeTitle: true,
+                  headerShown: false,
                 }}
               />
               <MainStack.Screen
                 name="LostDirect"
                 component={LostDirectScreen}
                 options={{
-                  headerShown: true,
                   headerTitle: '',
                 }}
               />
@@ -256,7 +252,13 @@ export default function App({navigation}) {
                 name="AdoptDirect"
                 component={AdoptDirectScreen}
                 options={{
-                  headerShown: true,
+                  headerTitle: '',
+                }}
+              />
+              <MainStack.Screen
+                name="ItemDetail"
+                component={ItemDetailScreen}
+                options={{
                   headerTitle: '',
                 }}
               />
